@@ -13,6 +13,7 @@
       $('#findin').removeClass('alert-danger');
       $('#findin').parent().removeClass('has-error');
       $('.post_to_li_success').addClass('hide');
+      $('.successful_message').addClass('hide');
     });
 
     $('#li_post').on('click', function(e){
@@ -21,15 +22,55 @@
       if(status !== '') {
         IN.API.Raw('/people/~/current-status').method('PUT').body(JSON.stringify(status))
           .result(function statusUpdateCallback(result) {
-            console.log(result);
             $('.post_to_li_success').removeClass('hide');
-        });
+          }).error(displayLoginError);
       } else {
         $('#findin').addClass('alert-danger');
         $('#findin').parent().addClass('has-error');
         $('.blank_requirement').removeClass('hide');
       }
     });
+
+    function SendMessage() {
+      var message = $('#findin').val();
+      var BODY = {
+        "recipients": {
+          "values": [{
+            "person": {
+              "_path": "/people/~",
+            }
+          }]
+        },
+        "subject": "need your recommendation in FINDIN",
+        "body": message
+      };
+
+      IN.API.Raw("/people/~/mailbox")
+            .method("POST")
+            .body(JSON.stringify(BODY))
+            .result(displayMessageSent)
+            .error(displayLoginError);
+     }
+
+     function displayMessageSent() {
+        $('.successful_message').removeClass('hide');
+     }
+
+     function displayLoginError() {
+        $('.login_to_continue').removeClass('hide');
+     }
+
+     $('#in_mail_connection').on('click', function(e){
+       e.preventDefault();
+       var status = $('#findin').val();
+       if(status !== '') {
+         SendMessage();
+       } else {
+         $('#findin').addClass('alert-danger');
+         $('#findin').parent().addClass('has-error');
+         $('.blank_requirement').removeClass('hide');
+       }
+     });
   });
 </script>
 
@@ -37,7 +78,8 @@
 Are you finding you a specialist - doctor, lawyer, investment-banker, designer, accountant?
 </div>
 <p class="post_to_li_success text-success hide">Your finding request successfully posted to LinkedIn.</p>
-<p class="post_to_li_failure text-danger hide">Oops! Something went wrong. Try again later...</p>
+<p class="successful_message text-success hide">InMail sent successfully.</p>
+<p class="login_to_continue text-info hide">Please login with LinkedIn to continue.</p>
 <form role="form">
   <div class="form-group">
     <input name='findin' placeholder='Gynaecologist in San Francisco' id='findin' type='text' class='form-control' />

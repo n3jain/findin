@@ -5,15 +5,23 @@
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-<script type="text/javascript" src="http://platform.linkedin.com/in.js">
-  api_key: 786g6bla3fu0sc
-  authorize: true
-</script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $.getScript('http://platform.linkedin.com/in.js?async=true', function success() {
+      IN.init({
+        api_key: '786g6bla3fu0sc',
+        authorize: true
+      });
+    });
+    });
+  </script>
 </head>
 <body>
   <header role='banner'>
+  <a href='/'>
     <h1>Findin</h1>
     <h4>Explore the power of LinkedIn</h4>
+  </a>
   </header>
   <div id="main-container" class="container-fluid">
     <div class="row">
