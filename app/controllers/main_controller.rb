@@ -4,4 +4,7 @@ class MainController < ApplicationController
 
   def dashboard
   end
+
+  def updates
+  end
 end
