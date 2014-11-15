@@ -16,9 +16,18 @@
             update_li.attr('id', 'up-'+key);
             $('.updates').append(update_li);
           }
-        }
+          } else {
+            if($('.update_list').find('.update').size() === 0) {
+              $('.updates').append($('.message'));
+            }
+          }
       });
     }
+
+    $('.dashboard').on('click', function(e) {
+      e.preventDefault();
+      window.location.href = '/dashboard';
+    });
 
     $('.refresh_list').on('click', function(e){
       e.preventDefault();
@@ -55,9 +64,9 @@
   </div>
   </li>
   </div>
-  <div class='hide message'>
+  <div class='hide'>
   <li class='message list-group-item'>
-  <span class='badge btn'><a href='/dashboard'>FindIn Dashboard</a></span>
+  <span class='badge btn dashboard'>FindIn Dashboard</span>
   <div class="media">
     <div class="media-body">
       <h4 class="media-heading">All Caught up! Let your network know what you're findIn now...</h4>
