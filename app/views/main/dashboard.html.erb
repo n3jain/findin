@@ -1,0 +1,49 @@
+<script type="IN/MemberData" data-ids="me">
+  <div class='row'>Hey <?js= $('me').firstName ?>!
+  <?js if ($("me").pictureUrl) { ?>
+    <img src="<?js= $("me").pictureUrl ?>"></img>
+  <?js } else { ?>
+  <?js } ?>
+  </div>
+</script>
+<script type='text/javascript'>
+  $(document).ready(function() {
+    $('#findin').on('click', function(e) {
+      $('.blank_requirement').addClass('hide');
+      $('#findin').removeClass('alert-danger');
+      $('#findin').parent().removeClass('has-error');
+      $('.post_to_li_success').addClass('hide');
+    });
+
+    $('#li_post').on('click', function(e){
+      e.preventDefault();
+      var status = $('#findin').val();
+      if(status !== '') {
+        IN.API.Raw('/people/~/current-status').method('PUT').body(JSON.stringify(status))
+          .result(function statusUpdateCallback(result) {
+            console.log(result);
+            $('.post_to_li_success').removeClass('hide');
+        });
+      } else {
+        $('#findin').addClass('alert-danger');
+        $('#findin').parent().addClass('has-error');
+        $('.blank_requirement').removeClass('hide');
+      }
+    });
+  });
+</script>
+
+<div class='row'>
+Are you finding you a specialist - doctor, lawyer, investment-banker, designer, accountant?
+</div>
+<p class="post_to_li_success text-success hide">Your finding request successfully posted to LinkedIn.</p>
+<p class="post_to_li_failure text-danger hide">Oops! Something went wrong. Try again later...</p>
+<form role="form">
+  <div class="form-group">
+    <input name='findin' placeholder='Gynaecologist in San Francisco' id='findin' type='text' class='form-control' />
+    <p class="blank_requirement text-danger hide">Can't be blank...</p>
+  </div>
+
+  <input type="button" value="Post to LinkedIn network" id='li_post' />
+  <input type="button" value="Ask connections on LinkedIn" id='in_mail_connection' />
+</form>
