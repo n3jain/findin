@@ -13,6 +13,8 @@
             var update_li = $('#update-1').clone();
             update_li.find('.profile_pic').attr('src', value.updateContent.person.pictureUrl);
             update_li.find('.media-heading').html(value.updateContent.person.firstName + ' is ' + comment);
+            update_li.find('.recommend').attr('data-target', '#demo'+key);
+            update_li.find('.recommendation').attr('id', 'demo'+key);
             update_li.attr('id', 'up-'+key);
             $('.updates').append(update_li);
           }
@@ -38,7 +40,46 @@
         console.log(result_json);
         populateUpdates(result_json);
       });
-    })
+    });
+
+    function SendMessage(message) {
+      var BODY = {
+        "recipients": {
+          "values": [{
+            "person": {
+              "_path": "/people/~",
+            }
+          }]
+        },
+        "subject": "Your connections FINDIN suitable candidate for you",
+        "body": message
+      };
+
+      IN.API.Raw("/people/~/mailbox")
+            .method("POST")
+            .body(JSON.stringify(BODY))
+            .result(displayMessageSent)
+            .error(displayLoginError);
+     }
+
+     function displayMessageSent() {
+        $('.successful_message').removeClass('hide');
+     }
+
+     function displayLoginError() {
+        $('.login_to_continue').removeClass('hide');
+     }
+
+     $('button').on('click', function(e){
+       e.preventDefault();
+       var key = $(this).parent().parent().parent().parent().attr('id');
+       var message = $('#'+key).find('.recommend_message').val();
+       if(message !== '') {
+         SendMessage(message);
+       } else {
+         $('#'+key).find('.recommend_message').addClass('alert-danger');
+       }
+     });
   });
 </script>
 
@@ -51,15 +92,26 @@
     </div>
   </div>
   </li>
-  <div class='hide update_list'>
+  <div id='update_list' class='hide update_list'>
   <li id='update-1' class="update list-group-item">
-  <span class="badge recommend btn">  Recommend? </span>
+  <span class="badge recommend btn" data-toggle="collapse" data-target='#demo' aria-expanded="true" aria-controls="demo">  Recommend? </span>
   <div class="media">
     <a class="media-left" href="#">
       <img class='profile_pic img-rounded img-responsive' src="http://public.slidesharecdn.com/b/images/user-32x32.png" />
     </a>
     <div class="media-body">
       <h4 class="media-heading">X is looking for Y in Z</h4>
+      <div id='demo' class="panel-collapse collapse recommendation" role="tabpanel" aria-expanded="true">
+        <div class="col-xs-6">
+          <div class="input-group">
+            <input type="text" class="recommend_message form-control">
+            <span class="input-group-btn">
+              <button class="send_message btn btn-default" type="button">Send</button>
+            </span>
+          </div><!-- /input-group -->
+        </div><!-- /.col-lg-6 -->
+      </div><!-- /.row -->
+    </div>
     </div>
   </div>
   </li>
