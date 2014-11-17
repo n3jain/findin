@@ -64,21 +64,27 @@
        }
      });
   });
+  function onLinkedInLoad() {
+      // Listen for an auth event to occur
+      IN.Event.on(IN, "auth", onLinkedInAuth);
+  }
+  function onLinkedInAuth() {
+  }
 </script>
 
 <div class='col-xs-9'>
 <div class='row'>
-<script type="IN/MemberData" data-ids="me">
-  <div class='col-xs-4'>
-    Hey <?js= $('me').firstName ?>!
-  </div>
-  <?js if ($("me").pictureUrl) { ?>
-  <div class='col-xs-4'>
-    <img class='img-rounded img-responsive' src="<?js= $("me").pictureUrl ?>"></img>
-  </div>
-  <?js } else { ?>
-  <?js } ?>
-</script>
+  <script type="IN/MemberData" data-ids="me">
+    <div class='col-xs-4'>
+        Hey <?js= $('me').firstName ?>!
+      </div>
+    <?js if ($("me").pictureUrl) { ?>
+      <div class='col-xs-4'>
+         <img class='img-rounded img-responsive' src="<?js= $("me").pictureUrl ?>"></img>
+       </div>
+      <?js } else { ?>
+      <?js } ?>
+   </script>
 <div class='col-xs-9 bottomPad'> Need a doctor, lawyer, investment-banker, designer, accountant?  </div>
 </div>
 </div>
@@ -101,4 +107,9 @@
       </div>
     </div>
   </form>
+  <div class="media">
+    <div class="media-body">
+      <h4 class="media-heading">See what people in your network are what <a href='/updates' class='action_link'>FindIn</a>.</h4>
+    </div>
+  </div>
 </div>
